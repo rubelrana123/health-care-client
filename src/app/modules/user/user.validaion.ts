@@ -9,6 +9,14 @@ const createPatientValidationSchema = z.object({
     })
 });
 
+const createAdminValidationSchema = z.object({
+
+})
+const createDoctorValidationSchema = z.object({
+
+})
 export const UserValidation = {
-    createPatientValidationSchema
+    createPatientValidationSchema,
+    createAdminValidationSchema,
+    createDoctorValidationSchema
 }
