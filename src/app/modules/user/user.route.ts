@@ -37,6 +37,7 @@ router.post(
     }
 );
 
+router.get("/", UserController.getAllFromDB)
 export const userRoutes = router;
 
  export const UserRoutes = router;
