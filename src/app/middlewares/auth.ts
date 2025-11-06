@@ -5,6 +5,7 @@ import { jwtHelper } from "../helpers/jwtHelpers";
 const auth = (...roles: string[]) => {
     return async (req: Request & { user?: any }, res: Response, next: NextFunction) => {
         try {
+            //access token
             const token = req.cookies.accessToken;
 
             if (!token) {
