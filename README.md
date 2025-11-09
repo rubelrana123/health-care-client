@@ -1,4 +1,4 @@
-# health-care-client
+# health-care-server
 
 
 # Diagram
