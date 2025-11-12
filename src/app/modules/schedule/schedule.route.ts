@@ -10,11 +10,11 @@ router.post(
     "/",
     ScheduleController.insertIntoDB
 )
-// router.get(
-//     "/",
-//     auth(UserRole.DOCTOR, UserRole.DOCTOR),
-//     ScheduleController.schedulesForDoctor
-// )
+router.get(
+    "/",
+    auth(UserRole.DOCTOR, UserRole.DOCTOR),
+    ScheduleController.schedulesForDoctor
+)
 
 
 
