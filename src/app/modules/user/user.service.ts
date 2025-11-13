@@ -68,40 +68,36 @@ const createAdmin = async (req: Request): Promise<Admin> => {
 
     return result;
 };
-
 const createDoctor = async (req: Request): Promise<Doctor> => {
-    
-    if (req.file) {
-        const uploadResult = await fileUploader.uploadToCloudinary(req.file) as any
-        req.body.patient.profilePhoto = uploadResult?.secure_url 
-        console.log(uploadResult, "upload result from service")
+
+    const file = req.file;
+
+    if (file) {
+        const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+        req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url
     }
-  console.log(req.body, "body data after setting photo");
+    const hashedPassword: string = await bcrypt.hash(req.body.password, 10)
 
-  // ✅ Hash password
-  const hashedPassword: string = await bcrypt.hash(req.body.password, 10);
+    const userData = {
+        email: req.body.doctor.email,
+        password: hashedPassword,
+        role: UserRole.DOCTOR
+    }
 
-  // ✅ Prepare user data
-  const userData = {
-    email: req.body.doctor.email,
-    password: hashedPassword,
-    role: UserRole.DOCTOR,
-  };
+    const result = await prisma.$transaction(async (transactionClient) => {
+        await transactionClient.user.create({
+            data: userData
+        });
 
-  // ✅ Transaction: create User then Doctor
-  const result = await prisma.$transaction(async (transactionClient) => {
-    await transactionClient.user.create({ data: userData });
+        const createdDoctorData = await transactionClient.doctor.create({
+            data: req.body.doctor
+        });
 
-    const createdDoctorData = await transactionClient.doctor.create({
-      data: req.body.doctor,
+        return createdDoctorData;
     });
 
-    return createdDoctorData;
-  });
-
-  return result;
+    return result;
 };
-
 
 const getAllFromDB = async (params: any, options: IOptions) => {
     const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options)

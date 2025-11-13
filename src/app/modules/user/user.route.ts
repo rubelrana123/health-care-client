@@ -27,9 +27,7 @@ router.post(
         req.body = UserValidation.createAdminValidationSchema.parse(JSON.parse(req.body.data))
         return UserController.createAdmin(req, res, next)
     }
-);
-
-+492211490
+); 
 router.post(
     "/create-doctor",
     // auth(UserRole.ADMIN),
