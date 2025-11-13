@@ -1,5 +1,7 @@
 import { addMinutes, addHours, format } from "date-fns";
 import { prisma } from "../../shared/prisma";
+import { IOptions, paginationHelper } from "../../helpers/paginationHelpers";
+import { Prisma } from "@prisma/client";
 const insertIntoDB = async (payload: any) => {
     // Destructure the payload to extract date and time ranges for scheduling
     const { startTime, endTime, startDate, endDate } = payload;
@@ -76,7 +78,60 @@ const insertIntoDB = async (payload: any) => {
     // Return all created schedule slots
     return schedules;
 }
+const schedulesForDoctor = async (filters: any, options: IOptions) => {
+   const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options)
+    const { startDateTime : filteringStartDateTime, endDateTime : filteringendDateTime } = filters;
+     
+  const andConditions: Prisma.ScheduleWhereInput[] = [];
+  {
+    filteringStartDateTime &&  filteringendDateTime && {
+        AND : [
+          { startDateTime: { gte: filteringStartDateTime } },
+          { endDateTime: { lte:  filteringendDateTime} }
+]
+    }
+  }
 
+   const whereConditions: Prisma.ScheduleWhereInput = andConditions.length > 0 ? {
+        AND: andConditions
+    } : {}
+
+    const result = await prisma.schedule.findMany({
+        skip,
+        take: limit,
+
+        where: whereConditions,
+        orderBy: {
+            [sortBy]: sortOrder
+        }
+    });
+
+    const total = await prisma.schedule.count({
+        where: whereConditions
+    });
+    return {
+        meta: {
+            page,
+            limit,
+            total
+        },
+        data: result
+    };
+}
+
+
+const deleteScheduleFromDB = async (id: string) => {
+    return await prisma.schedule.delete({
+        where: {
+            id
+        }
+    })
+}
 export const ScheduleService = {
     insertIntoDB,
+    schedulesForDoctor,
+    deleteScheduleFromDB
 }
+
+
+// module 8 9 10 - solve auth issye

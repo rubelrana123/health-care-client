@@ -12,14 +12,14 @@ router.post(
 )
 router.get(
     "/",
-    auth(UserRole.DOCTOR, UserRole.DOCTOR),
+    // auth(UserRole.DOCTOR, UserRole.DOCTOR),
     ScheduleController.schedulesForDoctor
 )
 
 
 
-// router.delete(
-//     "/:id",
-//     ScheduleController.deleteScheduleFromDB
-// )
+router.delete(
+    "/:id",
+    ScheduleController.deleteScheduleFromDB
+)
 export const ScheduleRoutes = router;

@@ -8,20 +8,23 @@ import { userSearchableFields } from './user.constant';
 import { IOptions, paginationHelper } from '../../helpers/paginationHelpers';
  
  const createPatient = async (req: Request) => {
-
+ 
     if (req.file) {
         const uploadResult = await fileUploader.uploadToCloudinary(req.file) as any
         req.body.patient.profilePhoto = uploadResult?.secure_url 
         console.log(uploadResult, "upload result from service")
     }
+  console.log(req.body, "body from servic e")
 
     const hashPassword = await bcrypt.hash(req.body.password, 10);
 
     const result = await prisma.$transaction(async (tnx : any) => {
         await tnx.user.create({
             data: {
-                email: req.body.patient.email,
-                password: hashPassword
+                 email: req.body.patient.email,
+                 password: hashPassword,
+                 role: UserRole.PATIENT
+
             }
         });
 
@@ -32,8 +35,6 @@ import { IOptions, paginationHelper } from '../../helpers/paginationHelpers';
 
     return result;
 }
-
-
 
 const createAdmin = async (req: Request): Promise<Admin> => {
 
@@ -69,35 +70,38 @@ const createAdmin = async (req: Request): Promise<Admin> => {
 };
 
 const createDoctor = async (req: Request): Promise<Doctor> => {
-
-    const file = req.file;
-
-    if (file) {
-        const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-        req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url
+    
+    if (req.file) {
+        const uploadResult = await fileUploader.uploadToCloudinary(req.file) as any
+        req.body.patient.profilePhoto = uploadResult?.secure_url 
+        console.log(uploadResult, "upload result from service")
     }
-    const hashedPassword: string = await bcrypt.hash(req.body.password, 10)
+  console.log(req.body, "body data after setting photo");
 
-    const userData = {
-        email: req.body.doctor.email,
-        password: hashedPassword,
-        role: UserRole.DOCTOR
-    }
+  // ✅ Hash password
+  const hashedPassword: string = await bcrypt.hash(req.body.password, 10);
 
-    const result = await prisma.$transaction(async (transactionClient) => {
-        await transactionClient.user.create({
-            data: userData
-        });
+  // ✅ Prepare user data
+  const userData = {
+    email: req.body.doctor.email,
+    password: hashedPassword,
+    role: UserRole.DOCTOR,
+  };
 
-        const createdDoctorData = await transactionClient.doctor.create({
-            data: req.body.doctor
-        });
+  // ✅ Transaction: create User then Doctor
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({ data: userData });
 
-        return createdDoctorData;
+    const createdDoctorData = await transactionClient.doctor.create({
+      data: req.body.doctor,
     });
 
-    return result;
+    return createdDoctorData;
+  });
+
+  return result;
 };
+
 
 const getAllFromDB = async (params: any, options: IOptions) => {
     const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options)

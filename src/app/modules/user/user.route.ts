@@ -1,9 +1,10 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { UserController } from './user.controller';
 import { fileUploader } from '../../helpers/FileUploader';
-import { UserValidation } from './user.validaion';
+ ;
 import { UserRole } from '@prisma/client';
 import auth from '../../middlewares/auth';
+import { UserValidation } from './user.validaion';
  
 const router = express.Router();
 
@@ -17,16 +18,18 @@ router.post(
 
 )
 
+
 router.post(
     "/create-admin",
-    auth(UserRole.ADMIN),
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
+        console.log("inner admin create")
         req.body = UserValidation.createAdminValidationSchema.parse(JSON.parse(req.body.data))
         return UserController.createAdmin(req, res, next)
     }
 );
 
++492211490
 router.post(
     "/create-doctor",
     // auth(UserRole.ADMIN),

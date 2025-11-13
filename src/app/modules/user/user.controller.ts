@@ -6,7 +6,7 @@ import pick from "../../helpers/pick";
 import { userFilterableFields } from "./user.constant";
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
-    // console.log("hello i am controller", req)
+    console.log("hello i am controller", req)
     const result = await UserService.createPatient(req);
     sendResponse(res, {
         statusCode: 201,
@@ -17,6 +17,7 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 })
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
+    console.log("hello admin cintrolller")
     console.log(req.body, "req from controller")
     const result = await UserService.createAdmin(req);
     sendResponse(res, {
@@ -28,7 +29,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createDoctor = catchAsync(async (req: Request, res: Response) => {
-
+  console.log(req, "req from controller")
     const result = await UserService.createDoctor(req);
     sendResponse(res, {
         statusCode: 201,

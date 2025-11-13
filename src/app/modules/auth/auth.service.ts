@@ -2,7 +2,7 @@
 import bcrypt from 'bcryptjs';
  
 import { prisma } from '../../shared/prisma';
-import { Request } from 'express';
+ 
 import { UserStatus } from '@prisma/client';
 import { jwtHelper } from '../../helpers/jwtHelpers';
 
