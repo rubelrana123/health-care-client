@@ -9,7 +9,7 @@ import { UserValidation } from './user.validaion';
 const router = express.Router();
 
 router.post(
-    "/create-patient",
+    "/create-patient", 
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => { 
         req.body = UserValidation.createPatientValidationSchema.parse(JSON.parse(req.body.data))
@@ -21,6 +21,7 @@ router.post(
 
 router.post(
     "/create-admin",
+    auth(UserRole.ADMIN),
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         console.log("inner admin create")
