@@ -10,7 +10,7 @@ import { doctorFilterableFields } from "./doctor.constant";
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
     const fillters = pick(req.query, doctorFilterableFields)
-
+   console.log(req.query, "query from controller")
     const result = await DoctorService.getAllFromDB(fillters, options);
 
     sendResponse(res, {
