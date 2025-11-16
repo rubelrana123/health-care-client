@@ -20,7 +20,7 @@ import { jwtHelper } from '../../helpers/jwtHelpers';
         throw new Error("password is incorrect")
     }
     
-    const accessToken = jwtHelper.generateToken({ email: isUserExit?.email, role: isUserExit?.role }, "abcd", "1h");
+    const accessToken = jwtHelper.generateToken({ email: isUserExit?.email, role: isUserExit?.role }, "abcd", "10d");
 
     const refreshToken = jwtHelper.generateToken({ email: isUserExit?.email, role: isUserExit?.role }, "abcdefgh", "90d");
 

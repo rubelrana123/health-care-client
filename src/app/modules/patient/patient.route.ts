@@ -17,6 +17,13 @@ import { PatientController } from "./patient.controller";
 
 const router = express.Router();
  
+
+// 2. **Patient Management**
+
+//    - Implement **get all patients** with **pagination, filtering, searching, and sorting**.
+//    - Implement **get patient by ID** functionality.
+//    - Implement **update patient by ID** functionality.
+//    - Implement **delete patient by ID** functionality.
  
 router.get(
     "/",

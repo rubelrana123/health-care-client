@@ -22,7 +22,7 @@ const getAllPatient = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updatePatientById = catchAsync(async (req: Request, res: Response) => {
-    // const result = await PatientService.updatePatientById(req.params.id);
+    const result = await PatientService.updatePatientById(req.params.id, req.body);
 
     sendResponse(res, {
         statusCode: 200,
@@ -34,7 +34,6 @@ const updatePatientById = catchAsync(async (req: Request, res: Response) => {
 
 const deletePatientFromDB = catchAsync(async (req: Request, res: Response) => {
     const result = await PatientService.deletePatientFromDB(req.params.id);
-
     sendResponse(res, {
         statusCode: 200,
         success: true,
