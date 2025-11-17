@@ -1,12 +1,12 @@
 model Appointment {
     id             String            @id @default(uuid())
-    patientId      String
+    patientId      String  //comes from login
     patient        Patient           @relation(fields: [patientId], references: [id])
-    doctorId       String
+    doctorId       String  //searched doctor
     doctor         Doctor            @relation(fields: [doctorId], references: [id])
-    scheduleId     String
+    scheduleId     String //selected schedule
     schedule       Schedule          @relation(fields: [scheduleId], references: [id])
-    videoCallingId String
+    videoCallingId String   //generated for video call
     status         AppointmentStatus @default(SCHEDULED)
     paymentStatus  PaymentStatus     @default(UNPAID)
     createAt       DateTime          @default(now())

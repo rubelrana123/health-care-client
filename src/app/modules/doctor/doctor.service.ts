@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Doctor, Prisma } from "@prisma/client";
 import { IOptions, paginationHelper } from "../../helpers/paginationHelpers";
 import { prisma } from "../../shared/prisma";
 import { doctorSearchableFields } from "./doctor.constant";
@@ -255,9 +255,32 @@ Return your response in JSON format with full individual doctor data.
     const result = await extractJsonFromMessage(completion.choices[0].message)
     return result;
 }
+
+const getByIdFromDB = async (id: string): Promise<Doctor | null> => {
+    const result = await prisma.doctor.findUnique({
+        where: {
+            id,
+            isDeleted: false,
+        },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialities: true,
+                },
+            },
+            doctorSchedules: {
+                include: {
+                    schedule: true
+                }
+            }
+        },
+    });
+    return result;
+};
 export const DoctorService = {
     getAllFromDB,
     updateIntoDB,
     deleteFromDB,
-    getAISuggestions
+    getAISuggestions,
+    getByIdFromDB
 }
