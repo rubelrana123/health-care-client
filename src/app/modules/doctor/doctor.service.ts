@@ -3,6 +3,9 @@ import { IOptions, paginationHelper } from "../../helpers/paginationHelpers";
 import { prisma } from "../../shared/prisma";
 import { doctorSearchableFields } from "./doctor.constant";
 import { IDoctorUpdateInput } from "./doctor.interface";
+import { openai } from "../../helpers/openRouter";
+import { error } from "console";
+import { extractJsonFromMessage } from "../../helpers/extractJsonFromMessage";
 
 const getAllFromDB = async (filters: any, options: IOptions) => {
     const { page, limit, skip, sortBy, sortOrder } = paginationHelper.calculatePagination(options);
@@ -169,8 +172,92 @@ const deleteFromDB = async (id: string) => {
     });
 }
 
+const getSpecialtiesFromAI = async (symptoms: string) => {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "google/gemini-2.0-flash-lite-preview-02-05", // Free model
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a medical triage assistant. Given symptoms, return ONLY a comma-separated list of medical specialties. No explanation.",
+        },
+        {
+          role: "user",
+          content: `Symptoms: ${symptoms}.`,
+        },
+      ],
+    });
+
+    const text = response.choices[0].message?.content || "";
+    const specialties = text
+      .split(",")
+      .map(( s: any) => s.trim())
+      .filter(Boolean);
+
+    return specialties.length ? specialties : ["General Physician"];
+  } catch (err) {
+    console.error("AI Error:", err);
+
+    // fallback if AI fails
+    return ["General Physician"];
+  }
+};
+
+
+ 
+const getAISuggestions = async (payload: { symptoms: string }) => {
+    if (!(payload && payload.symptoms)) {
+        throw new Error("symptoms is required!")
+    };
+
+    const doctors = await prisma.doctor.findMany({
+        where: { isDeleted: false },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialities: true
+                }
+            }
+        }
+    });
+
+    console.log("doctors data loaded.......\n");
+    const prompt = `
+You are a medical assistant AI. Based on the patient's symptoms, suggest the top 3 most suitable doctors.
+Each doctor has specialties and years of experience.
+Only suggest doctors who are relevant to the given symptoms.
+
+Symptoms: ${payload.symptoms}
+
+Here is the doctor list (in JSON):
+${JSON.stringify(doctors, null, 2)}
+
+Return your response in JSON format with full individual doctor data. 
+`;
+
+    console.log("analyzing......\n")
+    const completion = await openai.chat.completions.create({
+        model: 'z-ai/glm-4.5-air:free',
+        messages: [
+            {
+                role: "system",
+                content:
+                    "You are a helpful AI medical assistant that provides doctor suggestions.",
+            },
+            {
+                role: 'user',
+                content: prompt,
+            },
+        ],
+    });
+
+    const result = await extractJsonFromMessage(completion.choices[0].message)
+    return result;
+}
 export const DoctorService = {
     getAllFromDB,
     updateIntoDB,
-    deleteFromDB
+    deleteFromDB,
+    getAISuggestions
 }
