@@ -16,7 +16,7 @@ const createAppointment = async (user: IJWTPayload, payload: { doctorId: string,
             isDeleted: false
         }
     });
-
+  //check schedule is available or not
     const isBookedOrNot = await prisma.doctorSchedules.findFirstOrThrow({
         where: {
             doctorId: payload.doctorId,
