@@ -25,4 +25,5 @@ enum AppointmentStatus {
 enum PaymentStatus {
     PAID
     UNPAID
+    PENDING
 }
