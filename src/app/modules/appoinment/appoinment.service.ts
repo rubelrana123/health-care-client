@@ -33,7 +33,7 @@ const createAppointment = async (
   const videoCallingId = uuidv4();
 
   const result = await prisma.$transaction(async (tnx) => {
-    // 1. Create appointment
+    // 1. Create appointment record
     const appointmentData = await tnx.appointment.create({
       data: {
         patientId: patientData.id,
