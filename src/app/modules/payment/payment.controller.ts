@@ -5,10 +5,9 @@ import sendResponse from "../../shared/sendResponse";
 import stripe from "../../helpers/stripe";
  
 const handleStripeWebhookEvent = catchAsync(async (req: Request, res: Response) => {
-
+     console.log("inner web hook")
     const sig = req.headers["stripe-signature"] as string;
     const webhookSecret = "whsec_fd5def71807d6ca2bb4d5573f20f72a02b697767d66be71f616838073057b2d2"
-
     let event;
     try {
         event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
