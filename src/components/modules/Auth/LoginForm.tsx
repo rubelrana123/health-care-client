@@ -1,0 +1,91 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+import { useActionState } from 'react'
+import { Button } from '@/components/ui/button'
+import { CardContent, CardFooter } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { loginUser } from '@/services/auth/loginUser'
+import Link from 'next/link'
+ 
+export const LoginForm = () => {
+  const [state, action, isPending] = useActionState(loginUser, null);
+
+
+    const getFieldError = (fieldName: string) => {
+    if (state && state.errors) {
+      const error = state.errors.find((err: any) => err.field === fieldName);
+      return error.message;
+    } else {
+      return null;
+    }
+  };
+  console.log(state);
+ console.log(state, "state here from login form")
+  return (
+    <div>
+      <form action={action}>
+        <CardContent>
+          <div className="flex flex-col gap-6">
+
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="m@example.com"
+                
+              />
+            {getFieldError("email") && (
+              <p className="text-red-600">
+                {getFieldError("email")}
+              </p>
+            )}
+   
+            </div>
+
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <a
+                  href="/forget-password"
+                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                >
+                  Forgot your password?
+                </a>
+              </div>
+              <Input id="password" type="password" name="password"  />
+                          {getFieldError("password") && (
+              <p className="text-red-600">
+                {getFieldError("password")}
+              </p>
+            )}
+            </div>
+
+          </div>
+        </CardContent>
+
+        <CardFooter className="flex-col gap-2">
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? "Logging in..." : "Login"}
+          </Button>
+
+          <Button variant="outline" className="w-full">
+            Login with Google
+          </Button>
+
+          <p className="text-sm text-center text-muted-foreground">
+            Don’t have an account?{" "}
+            <Link
+              href="/register"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              Create new account
+            </Link>
+          </p>
+        </CardFooter>
+      </form>
+    </div>
+  );
+};
