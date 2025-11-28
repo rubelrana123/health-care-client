@@ -5,17 +5,19 @@ import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { loginUser } from '@/services/auth/loginUser'
-import Link from 'next/link'
  
-export const LoginForm = () => {
-  const [state, action, isPending] = useActionState(loginUser, null);
+import Link from 'next/link'
+import { loginUser } from '@/services/auth/loginUser';
+ 
 
+export  const LoginForm = ({ redirect }: { redirect?: string }) => {
+  const [state, action, isPending] = useActionState(loginUser, null);
+console.log(state, action, isPending, "from form")
 
     const getFieldError = (fieldName: string) => {
     if (state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
-      return error.message;
+      return error?.message;
     } else {
       return null;
     }
@@ -29,12 +31,14 @@ export const LoginForm = () => {
           <div className="flex flex-col gap-6">
 
             <div className="grid gap-2">
+            {redirect && <input type="hidden" name="redirect" value={redirect} />}
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
                 name="email"
                 placeholder="m@example.com"
+                defaultValue={"rubelrana@gmail.com"}
                 
               />
             {getFieldError("email") && (
@@ -55,7 +59,7 @@ export const LoginForm = () => {
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" name="password"  />
+              <Input id="password" type="password" name="password"  defaultValue={"123456"} />
                           {getFieldError("password") && (
               <p className="text-red-600">
                 {getFieldError("password")}

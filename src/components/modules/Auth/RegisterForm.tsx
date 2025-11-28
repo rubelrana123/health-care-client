@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,20 @@ export const RegisterForm = () => {
 
   // Hook: manages form submission + returned state
   const [state, action, isPending] = useActionState(registerPatient, null);
-  console.log(state, "state data")
+  console.log(state, "state");
+
+  const getFieldError = (fieldName: string) => {
+    if (state && state.errors) {
+      const error = state.errors.find((err: any) => err.field === fieldName);
+      if (error) {
+        return error.message;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
  
   return (
     <div>
@@ -29,6 +43,11 @@ export const RegisterForm = () => {
               placeholder="Your full name"
               required
             />
+            {getFieldError("name") && (
+              <p className="text-red-600">
+                {getFieldError("name")}
+              </p>
+            )}
           </div>
 
           {/* Email */}
@@ -41,6 +60,11 @@ export const RegisterForm = () => {
               placeholder="m@example.com"
               required
             />
+     {getFieldError("email") && (
+              <p className="text-red-600">
+                {getFieldError("email")}
+              </p>
+            )}
           </div>
 
           {/* Address */}
@@ -53,6 +77,11 @@ export const RegisterForm = () => {
               placeholder="Your address"
               required
             />
+                        {getFieldError("address") && (
+              <p className="text-red-600">
+                {getFieldError("address")}
+              </p>
+            )}
           </div>
 
           {/* Password */}
@@ -77,6 +106,11 @@ export const RegisterForm = () => {
               placeholder="******"
               required
             />
+                        {getFieldError("confirmPassword") && (
+              <p className="text-red-600">
+                {getFieldError("confirmPassword")}
+              </p>
+            )}
           </div>
 
           {/* Submit inside form */}
