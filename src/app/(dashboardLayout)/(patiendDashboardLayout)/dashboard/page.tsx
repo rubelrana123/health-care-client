@@ -1,7 +1,6 @@
-export default function DashboardPage() {
+ 
+export default function DashboardLayout() {
   return (
-    <div>
-      DashboardPage
-    </div>
-  );
+    <div>Common Dashboard layout Home Page</div>
+  )
 }

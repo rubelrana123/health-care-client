@@ -1,16 +1,19 @@
  
 import {
   Card,
-  CardAction,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Button } from '@/components/ui/button'
 import { RegisterForm } from '@/components/modules/Auth/RegisterForm'
-export default function RegisterPage() {
+
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ redirect?: string }>;
+}) {
+
+  const params = (await searchParams) || {};
   return (
     <div className="">
      <Card className="w-full max-w-sm mx-auto">
@@ -20,7 +23,7 @@ export default function RegisterPage() {
           Enter your info below to register to your account
         </CardDescription>
       </CardHeader>
-      <RegisterForm />
+      <RegisterForm   redirect={params.redirect}/>
  
     </Card>
 

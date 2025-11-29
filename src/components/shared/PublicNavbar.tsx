@@ -13,7 +13,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-export function PublicNavbar() {
+import { getCookie } from "@/services/auth/tokenHandlers";
+import LogoutButton from "./LogoutButton";
+export async function PublicNavbar() {
   const navItems = [
     { href: "/consultation", label: "Consultation" },
     { href: "/health-plan", label: "Health Plans" },
@@ -21,6 +23,8 @@ export function PublicNavbar() {
     { href: "/diagnostics", label: "Diagnostics" },
     { href: "/ngos", label: "NGOs" },
   ];
+
+  const accessToken = await getCookie("accessToken");
   return (
     <nav className="sticky top-0 z-50 bg-white/80 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,10 +65,16 @@ export function PublicNavbar() {
               )}
             </button>
 
-            {/* Login Button */}
-            <Link href="/login">
+            {/* Login Button */}{
+              accessToken ?
+
+              <LogoutButton/>
+              : 
+               <Link href="/login">
               <Button size="default">Login</Button>
             </Link>
+            }
+
           </div>
            {/* mobile navs */}
           <div className="md:hidden">

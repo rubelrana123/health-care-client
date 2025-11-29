@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
  
 import Link from 'next/link'
 import { loginUser } from '@/services/auth/loginUser';
+import { toast } from 'sonner';
  
 
 export  const LoginForm = ({ redirect }: { redirect?: string }) => {
@@ -22,6 +23,14 @@ console.log(state, action, isPending, "from form")
       return null;
     }
   };
+
+
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
+
   console.log(state);
  console.log(state, "state here from login form")
   return (

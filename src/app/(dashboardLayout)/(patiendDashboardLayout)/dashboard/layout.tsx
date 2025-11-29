@@ -1,7 +1,17 @@
-export default function DashboardLayout({
+import LogoutButton from "@/components/shared/LogoutButton";
+import { getCookie } from "@/services/auth/tokenHandlers";
+
+ 
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  const accessToken = await getCookie("accessToken");
+  return <div>
+    {children}
+    {
+      accessToken && <LogoutButton/>
+    }
+    </div>;
 }
