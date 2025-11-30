@@ -1,17 +1,11 @@
-import LogoutButton from "@/components/shared/LogoutButton";
-import { getCookie } from "@/services/auth/tokenHandlers";
+import React from "react";
 
- 
-export default async function DashboardLayout({
+const PatientDashboardLayout = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
-  const accessToken = await getCookie("accessToken");
-  return <div>
-    {children}
-    {
-      accessToken && <LogoutButton/>
-    }
-    </div>;
-}
+}) => {
+  return <div>{children}</div>;
+};
+
+export default PatientDashboardLayout;

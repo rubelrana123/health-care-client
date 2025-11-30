@@ -1,6 +1,5 @@
- 
-export default function DashboardLayout() {
-  return (
-    <div>Common Dashboard layout Home Page</div>
-  )
-}
+const PatientDashboardPage = () => {
+  return <div>PatientDashboardPage</div>;
+};
+
+export default PatientDashboardPage;
