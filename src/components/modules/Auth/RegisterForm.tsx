@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerPatient } from "@/services/auth/registerPatient";
 import { toast } from "sonner";
+import InputFieldError from "@/components/shared/InputFieldError";
 
 export const RegisterForm = ({ redirect }: { redirect?: string }) => {
 
@@ -49,13 +50,9 @@ export const RegisterForm = ({ redirect }: { redirect?: string }) => {
               name="name"     // important
               type="text"
               placeholder="Your full name"
-              required
+              
             />
-            {getFieldError("name") && (
-              <p className="text-red-600">
-                {getFieldError("name")}
-              </p>
-            )}
+          <InputFieldError field='name' state={state}/>
           </div>
 
           {/* Email */}
@@ -66,13 +63,9 @@ export const RegisterForm = ({ redirect }: { redirect?: string }) => {
               name="email"
               type="email"
               placeholder="m@example.com"
-              required
+              
             />
-     {getFieldError("email") && (
-              <p className="text-red-600">
-                {getFieldError("email")}
-              </p>
-            )}
+  <InputFieldError field='email' state={state}/>
           </div>
 
           {/* Address */}
@@ -83,13 +76,9 @@ export const RegisterForm = ({ redirect }: { redirect?: string }) => {
               name="address"
               type="text"
               placeholder="Your address"
-              required
+              
             />
-                        {getFieldError("address") && (
-              <p className="text-red-600">
-                {getFieldError("address")}
-              </p>
-            )}
+  <InputFieldError field='address' state={state}/>
           </div>
 
           {/* Password */}
@@ -100,8 +89,9 @@ export const RegisterForm = ({ redirect }: { redirect?: string }) => {
               name="password"
               type="password"
               placeholder="******"
-              required
+              
             />
+              <InputFieldError field='password' state={state}/>
           </div>
 
           {/* Confirm Password */}
@@ -112,13 +102,9 @@ export const RegisterForm = ({ redirect }: { redirect?: string }) => {
               name="confirmPassword"
               type="password"
               placeholder="******"
-              required
+              
             />
-                        {getFieldError("confirmPassword") && (
-              <p className="text-red-600">
-                {getFieldError("confirmPassword")}
-              </p>
-            )}
+  <InputFieldError field='confirmPassword' state={state}/>
           </div>
 
           {/* Submit inside form */}

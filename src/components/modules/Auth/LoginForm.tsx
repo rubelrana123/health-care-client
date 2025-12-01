@@ -9,20 +9,21 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { loginUser } from '@/services/auth/loginUser';
 import { toast } from 'sonner';
+import InputFieldError from '@/components/shared/InputFieldError';
  
 
 export  const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, action, isPending] = useActionState(loginUser, null);
 console.log(state, action, isPending, "from form")
 
-    const getFieldError = (fieldName: string) => {
-    if (state && state.errors) {
-      const error = state.errors.find((err: any) => err.field === fieldName);
-      return error?.message;
-    } else {
-      return null;
-    }
-  };
+  //   const getFieldError = (fieldName: string) => {
+  //   if (state && state.errors) {
+  //     const error = state.errors.find((err: any) => err.field === fieldName);
+  //     return error?.message;
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
 
   useEffect(() => {
@@ -47,14 +48,11 @@ console.log(state, action, isPending, "from form")
                 type="email"
                 name="email"
                 placeholder="m@example.com"
-                defaultValue={"rubelrana@gmail.com"}
+                defaultValue={"super@admin.com"}
                 
               />
-            {getFieldError("email") && (
-              <p className="text-red-600">
-                {getFieldError("email")}
-              </p>
-            )}
+              <InputFieldError field='name' state={state}/>
+ 
    
             </div>
 
@@ -68,12 +66,8 @@ console.log(state, action, isPending, "from form")
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" name="password"  defaultValue={"123456"} />
-                          {getFieldError("password") && (
-              <p className="text-red-600">
-                {getFieldError("password")}
-              </p>
-            )}
+              <Input id="password" type="password" name="password"  defaultValue={"superadmin"} />
+           <InputFieldError field='password' state={state}/>
             </div>
 
           </div>
