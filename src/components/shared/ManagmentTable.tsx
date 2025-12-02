@@ -21,6 +21,7 @@ export interface Column<T> {
   header: string;
   accessor: keyof T | ((row: T) => React.ReactNode);
   className?: string;
+  sortKey? : string
 }
 
 interface ManagementTableProps<T> {
@@ -45,6 +46,8 @@ function ManagementTable<T>({
   isRefreshing = false,
 }: ManagementTableProps<T>) {
   const hasActions = onView || onEdit || onDelete;
+
+  console.log(data, "data from table managment")
   return (
     <>
       <div className="rounded-lg border relative">
@@ -85,6 +88,7 @@ function ManagementTable<T>({
                 </TableCell>
               </TableRow>
             ) : (
+              data &&
               data?.map((item) => (
                 <TableRow key={getRowKey(item)}>
                   {columns.map((col, idx) => (
