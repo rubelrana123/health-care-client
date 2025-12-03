@@ -27,6 +27,7 @@ const AdminsTable = ({admins} : AdminsTableProps) => {
   const [editingAdmin, setEditingAdmin] = useState<IAdmin | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
  console.log(admins, "admins from adminRTable")
+ //handler function
   const handleRefresh = () => {
     startTransition(() => {
       router.refresh();
